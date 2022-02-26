@@ -29,4 +29,5 @@ jobs:
     - run: npm install -g yarn
     - run: yarn
     - run: yarn format
+    - run: yarn lint
     - run: yarn build
