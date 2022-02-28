@@ -79,6 +79,10 @@ async function request<RequestDataType, ResponseDataType>(
   }
 }
 
+/**
+ * RequestParamsType, ResponseDataType
+ * @returns a function which sends a GET request to the given path
+ */
 export function createGetRequest<RequestParamsType, ResponseDataType>(
   path: string
 ) {
