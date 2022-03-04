@@ -53,15 +53,17 @@ let RegistrationForm = () => {
     confirm: "",
     tags: ["dd"],
   });
-
+  const [disabled, setDisabled] = useState(false);
   const [formErrors, setFormErrors] = useState<CreateUserDtoWithConfirmErrors>(
     {}
   );
 
   const HandleFormDataSubmit = async () => {
     console.log(formData);
+    setDisabled(true);
     const res = await userService.createUser(formData);
     if (res.status === "rejected") {
+      setDisabled(false);
       setFormErrors(res.errors);
     } else {
       alert("注册成功");
@@ -192,6 +194,7 @@ let RegistrationForm = () => {
             type="primary"
             htmlType="submit"
             onClick={HandleFormDataSubmit}
+            disabled={disabled}
           >
             Register
           </Button>
