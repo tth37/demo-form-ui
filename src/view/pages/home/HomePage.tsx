@@ -1,6 +1,8 @@
 import { Box, Button, Grid, TextField } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+
 import { CreateUserDtoWithConfirm } from "../../../common/schema/user";
 import { mergeObject } from "../../../common/utils/merge";
 import {
@@ -26,6 +28,7 @@ let HomePage: React.FC = () => {
   const handleFormDataChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
+    console.log(e.target.id, e.target.value);
     setFormData(mergeObject(formData, e.target.id, e.target.value));
   };
 
@@ -80,6 +83,7 @@ let HomePage: React.FC = () => {
         />
       </Box>
       <Button onClick={handleFormDataSubmit}>submit</Button>
+      <NavLink to="/Register">点我注册</NavLink>
     </Grid>
   );
 };

@@ -1,20 +1,22 @@
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import "./App.css";
-import { Router, View } from "react-navi";
-import { mount, route } from "navi";
-import HomePage from "./view/pages/home/HomePage";
 
-const routes = mount({
-  "/": route({ view: <HomePage /> }),
+import HomePage from "./view/pages/home/HomePage";
+import { Navigate, Route, Router, Routes } from "react-router";
+
+const RegistrationForm = lazy(() => {
+  return import("./view/pages/register/RegistrationForm");
 });
 
 function App() {
   return (
-    <Router routes={routes}>
-      <Suspense fallback={null}>
-        <View />
-      </Suspense>
-    </Router>
+    <Suspense fallback={<h1>loading...</h1>}>
+      <Routes>
+        <Route path="/" element={<Navigate to="/Homepage"></Navigate>}></Route>
+        <Route path="/HomePage" element={<HomePage />}></Route>
+        <Route path="/Register" element={<RegistrationForm />}></Route>
+      </Routes>
+    </Suspense>
   );
 }
 
