@@ -45,7 +45,8 @@ const tailFormItemLayout = {
   },
 };
 
-let RegistrationForm = () => {
+function Registrationform() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<CreateUserDtoWithConfirm>({
     name: "",
     password: "",
@@ -68,7 +69,7 @@ let RegistrationForm = () => {
     } else {
       alert("注册成功");
       setTimeout(() => {
-        window.location.replace("/Homepage");
+        navigate("/Homepage");
       }, 1000);
     }
   };
@@ -202,7 +203,8 @@ let RegistrationForm = () => {
       </Form>
     </div>
   );
-};
+}
 
+let RegistrationForm = Registrationform;
 RegistrationForm = observer(RegistrationForm);
 export default RegistrationForm;
