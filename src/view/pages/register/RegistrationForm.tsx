@@ -1,16 +1,5 @@
 import React, { useState } from "react";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Cascader,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  AutoComplete,
-} from "antd";
+import { Form, Input, Select, Checkbox, Button } from "antd";
 import "antd/dist/antd.css";
 import "./index.css";
 import { observer } from "mobx-react-lite";
@@ -20,6 +9,8 @@ import {
   CreateUserDtoWithConfirmErrors,
   userService,
 } from "../../../controller/user";
+import { NavLink, useNavigate } from "react-router-dom";
+import Notice from "../notice/Notice";
 
 const { Option } = Select;
 
@@ -54,7 +45,7 @@ const tailFormItemLayout = {
   },
 };
 
-const RegistrationForm = () => {
+let RegistrationForm = () => {
   const [formData, setFormData] = useState<CreateUserDtoWithConfirm>({
     name: "",
     password: "",
@@ -67,35 +58,32 @@ const RegistrationForm = () => {
     {}
   );
 
-  const handleFormDataChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setFormData(mergeObject(formData, e.target.id, e.target.value));
-  };
-
-  const handleFormDataSubmit = async () => {
+  const HandleFormDataSubmit = async () => {
     console.log(formData);
     const res = await userService.createUser(formData);
     if (res.status === "rejected") {
       setFormErrors(res.errors);
+    } else {
+      alert("注册成功");
+      setTimeout(() => {
+        window.location.replace("/Homepage");
+      }, 1000);
     }
   };
 
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
-  };
-  const onValuesChange = (values: any) => {
-    console.log(values);
+  const onValuesChange = (e: any) => {
+    //let a=Object.getOwnPropertyNames(values)[0];
+    setFormData(
+      mergeObject(
+        formData,
+        Object.getOwnPropertyNames(e)[0],
+        String(Object.values(e)[0])
+      )
+    );
   };
 
-  const [autoCompleteResult, setAutoCompleteResult] = useState([]);
-
-  const websiteOptions = autoCompleteResult.map((website) => ({
-    label: website,
-    value: website,
-  }));
   return (
     <div id="container">
       <Form
@@ -104,12 +92,12 @@ const RegistrationForm = () => {
         layout={"horizontal"}
         name="register"
         onValuesChange={onValuesChange}
-        onFinish={onFinish}
         scrollToFirstError
       >
         <Form.Item
           name="email"
           label="E-mail"
+          help={!!formErrors.email ? formErrors.email[0] : null}
           rules={[
             {
               type: "email",
@@ -127,10 +115,11 @@ const RegistrationForm = () => {
         <Form.Item
           name="password"
           label="Password"
+          help={!!formErrors.password ? formErrors.password[0] : null}
           rules={[
             {
               required: true,
-              message: "Please input your password!",
+              message: true ? "password wrong" : "",
             },
           ]}
           hasFeedback
@@ -165,31 +154,19 @@ const RegistrationForm = () => {
         </Form.Item>
 
         <Form.Item
-          name="nickname"
-          label="Nickname"
+          name="name"
+          label="Name"
           tooltip="What do you want others to call you?"
+          help={!!formErrors.name ? formErrors.name[0] : null}
           rules={[
             {
               required: true,
-              message: "Please input your nickname!",
+              message: "Please input your name!",
               whitespace: true,
             },
           ]}
         >
           <Input />
-        </Form.Item>
-
-        <Form.Item
-          name="intro"
-          label="Intro"
-          rules={[
-            {
-              required: true,
-              message: "Please input Intro",
-            },
-          ]}
-        >
-          <Input.TextArea showCount maxLength={100} />
         </Form.Item>
 
         <Form.Item
@@ -206,11 +183,16 @@ const RegistrationForm = () => {
           {...tailFormItemLayout}
         >
           <Checkbox>
-            I have read the <a href="">agreement</a>
+            I have read the
+            <Notice />
           </Checkbox>
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={HandleFormDataSubmit}
+          >
             Register
           </Button>
         </Form.Item>
@@ -219,4 +201,5 @@ const RegistrationForm = () => {
   );
 };
 
+RegistrationForm = observer(RegistrationForm);
 export default RegistrationForm;
